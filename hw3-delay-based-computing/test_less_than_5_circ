@@ -1,0 +1,15 @@
+digraph {
+	"IN.X" [label="<IN.X> IN.X | <out> out" shape=record]
+	"IN.Y" [label="<IN.Y> IN.Y | <out> out" shape=record]
+	"IN.C" [label="<IN.C> IN.C | <out> out" shape=record]
+	"IN.D" [label="<IN.D> IN.D | <out> out" shape=record]
+	INH0 [label="{<A> A|<B> B} | <INH0> INH0 | <out> out" shape=record]
+	INH1 [label="{<A> A|<B> B} | <INH1> INH1 | <out> out" shape=record]
+	LA2 [label="{<A> A|<B> B} | <LA2> LA2 | <out> out" shape=record]
+	"IN.X" -> INH0 [headport=B tailport=out]
+	"IN.C" -> INH0 [headport=A tailport=out]
+	"IN.Y" -> INH1 [headport=B tailport=out]
+	"IN.D" -> INH1 [headport=A tailport=out]
+	INH0 -> LA2 [headport=A tailport=out]
+	INH1 -> LA2 [headport=B tailport=out]
+}

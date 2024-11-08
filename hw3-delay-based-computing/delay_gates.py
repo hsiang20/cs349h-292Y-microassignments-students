@@ -21,7 +21,7 @@ class Gate:
         self.ports = ports
 
     def reset(self):
-        raise Exception("overrideme: reset state of gate <%s>" % self.id)
+        raise Exception("override me: reset state of gate <%s>" % self.id)
 
     def execute(self, time, inputs):
         raise Exception("override me: process input pulse and returns if the gate produces a pulse or not")
@@ -40,42 +40,68 @@ class LastArrival(Gate):
 
     def __init__(self):
         Gate.__init__(self, "LA", ["A", "B"])
+        self.has_pulse = False
 
     def reset(self):
-        raise NotImplementedError
+        # raise NotImplementedError
+        self.has_pulse = False
 
     def execute(self, time, inputs):
         in0, in1 = inputs["A"], inputs["B"]
-        raise NotImplementedError
-        # return PULSE
+        # raise NotImplementedError
+        if in0 == PULSE:
+            if self.has_pulse:
+                return PULSE
+            else:
+                self.has_pulse = True
+        if in1 == PULSE:
+            if self.has_pulse:
+                return PULSE
+            else:
+                self.has_pulse = True
         return NO_PULSE
-
 
 class FirstArrival(Gate):
 
     def __init__(self):
         Gate.__init__(self, "FA", ["A", "B"])
+        self.has_output = False
 
     def reset(self):
-        raise NotImplementedError
+        # raise NotImplementedError
+        self.has_output = False
+        return
+        
 
     def execute(self, time, inputs):
         in0, in1 = inputs["A"], inputs["B"]
-        raise NotImplementedError
-        return NO_PULSE
-
+        # raise NotImplementedError
+        if in0 == PULSE or in1 == PULSE:
+            if not self.has_output:
+                self.has_output = True
+                return PULSE
+        else: 
+            return NO_PULSE
 
 class Inhibition(Gate):
 
     def __init__(self):
         Gate.__init__(self, "INH", ["A", "B"])
+        self.suppressed = False
 
     def reset(self):
-        raise NotImplementedError
+        # raise NotImplementedError
+        self.suppressed = False
 
     def execute(self, time, inputs):
         inA, inB = inputs["A"], inputs["B"]
-        raise NotImplementedError
+        # raise NotImplementedError
+        if inA:
+            self.suppressed = True
+        if self.suppressed: 
+            return NO_PULSE
+        if inB:
+            return PULSE
         return NO_PULSE
 
 
@@ -102,19 +128,27 @@ class DelayGate(Gate):
     def __init__(self, delay_ns):
         Gate.__init__(self, "DEL", ["A"])
         self.delay_ns = delay_ns
-        pass
+        self.pulse_time = []
 
     def reset(self):
-        raise NotImplementedError
+        # raise NotImplementedError
+        self.pulse_time = []
 
     def delay(self):
         return 1e-10
 
     def execute(self, time, inputs):
         inp = inputs["A"]
-        raise NotImplementedError
+        # raise NotImplementedError
+        if inp:
+            self.pulse_time.append(time)
+        if len(self.pulse_time) > 0:
+            if (time - self.pulse_time[0]) > self.delay_ns:
+                self.pulse_time = self.pulse_time[1:]
+                return PULSE
         return NO_PULSE
-
+            
+        
 
 class Input(Gate):
 

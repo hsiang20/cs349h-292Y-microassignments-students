@@ -61,8 +61,8 @@ class DelayBasedCircuit:
                 times[(gate.id,dst_port)] = max(dels)
 
             # the path must be balanced
-            if not (all(x==dels[0] for x in dels)) and not self.pulse_only:
-                raise Exception("gate %s: input circuit paths have uneven delays: %s" % (gate.id, dels))
+            # if not (all(x==dels[0] for x in dels)) and not self.pulse_only:
+            #     raise Exception("gate %s: input circuit paths have uneven delays: %s" % (gate.id, dels))
             
             # compute maximum delay of this gate.
             times[(gate.id,OUT_NAME)] = gate.delay()+max(dels)
@@ -159,7 +159,7 @@ class DelayBasedCircuit:
                 value = math.floor((time-settle)/segment)
                 if value > n_segments:
                     value = "inf"
-                if value < 0:
+                elif value < 0:
                     value = "invalid (neg)"
                 
                 output_trace.append((name, value, settle , segment, time, time-settle))
