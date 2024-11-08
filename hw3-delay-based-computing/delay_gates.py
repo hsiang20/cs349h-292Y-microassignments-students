@@ -72,7 +72,6 @@ class FirstArrival(Gate):
         self.has_output = False
         return
         
-
     def execute(self, time, inputs):
         in0, in1 = inputs["A"], inputs["B"]
         # raise NotImplementedError
@@ -83,8 +82,8 @@ class FirstArrival(Gate):
         else: 
             return NO_PULSE
 
-class Inhibition(Gate):
 
+class Inhibition(Gate):
     def __init__(self):
         Gate.__init__(self, "INH", ["A", "B"])
         self.suppressed = False
@@ -112,19 +111,23 @@ class DigitalReadOutGate(Gate):
         self.has_pulse = False
 
     def reset(self):
-        raise NotImplementedError
+        # raise NotImplementedError
+        self.has_pulse = False
 
     def delay(self):
         return 1e-10
 
     def execute(self, time, inputs):
         inp = inputs["A"]
-        raise NotImplementedError
+        # raise NotImplementedError
+        if inp:
+            self.has_pulse = True
+        if self.has_pulse:
+            return PULSE
         return NO_PULSE
 
 
 class DelayGate(Gate):
-
     def __init__(self, delay_ns):
         Gate.__init__(self, "DEL", ["A"])
         self.delay_ns = delay_ns

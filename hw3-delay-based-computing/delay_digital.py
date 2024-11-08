@@ -28,7 +28,15 @@ def and_gate(circ,A,B):
     (Ap,An) = A
     (Bp,Bn) = B
     Rp,Rn = None,None
-    raise NotImplementedError 
+    # raise NotImplementedError 
+    la = circ.add_gate(LastArrival())
+    fa = circ.add_gate(FirstArrival())
+    circ.add_wire(Ap, la, "A")
+    circ.add_wire(Bp, la, "B")
+    circ.add_wire(An, fa, "A")
+    circ.add_wire(Bn, fa, "B")
+    Rp = la
+    Rn = fa
     return (Rp,Rn)
     
 
@@ -36,15 +44,24 @@ def or_gate(circ,A,B):
     (Ap,An) = A
     (Bp,Bn) = B
     Rp,Rn = None,None
-    raise NotImplementedError 
+    # raise NotImplementedError 
+    la = circ.add_gate(LastArrival())
+    fa = circ.add_gate(FirstArrival())
+    circ.add_wire(Ap, fa, "A")
+    circ.add_wire(Bp, fa, "B")
+    circ.add_wire(An, la, "A")
+    circ.add_wire(Bn, la, "B")
+    Rp = fa
+    Rn = la
     return (Rp,Rn)
  
-
 
 def not_gate(circ,A):
     (Ap,An) = A
     Rp,Rn = None,None
-    raise NotImplementedError 
+    # raise NotImplementedError 
+    Rp = An
+    Rn = Ap
     return (Rp,Rn)
 
 
@@ -107,5 +124,12 @@ def execute_logic_circuit(dro,circ,Xbin,Ybin,Zbin):
     print("expected: %d" % (1 if reference else 0))
 
 fr,circ = build_logic_circuit()
+execute_logic_circuit(fr,circ,Xbin=0,Ybin=0,Zbin=0)
+execute_logic_circuit(fr,circ,Xbin=0,Ybin=0,Zbin=1)
+execute_logic_circuit(fr,circ,Xbin=0,Ybin=1,Zbin=0)
+execute_logic_circuit(fr,circ,Xbin=0,Ybin=1,Zbin=1)
+execute_logic_circuit(fr,circ,Xbin=1,Ybin=0,Zbin=0)
 execute_logic_circuit(fr,circ,Xbin=1,Ybin=0,Zbin=1)
+execute_logic_circuit(fr,circ,Xbin=1,Ybin=1,Zbin=0)
+execute_logic_circuit(fr,circ,Xbin=1,Ybin=1,Zbin=1)
 

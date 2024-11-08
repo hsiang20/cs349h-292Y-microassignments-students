@@ -112,7 +112,7 @@ def test_less_than_5():
 
 def test_more_than_5():
     input_x = 2
-    input_y = 3
+    input_y = 7
     circ = DelayBasedCircuit()
     inx1 = circ.add_gate(Input("X1"))
     iny1 = circ.add_gate(Input("Y1"))
